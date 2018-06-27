@@ -1,0 +1,507 @@
+#include<windows.h>
+#include<stdio.h>
+#include<GL/glut.h>
+#include<string.h>
+#include<math.h>
+#include<math.h>
+int maxy=600;
+int count=0;
+int maxx=500;
+int n=2;
+int m=3;
+int r=200,done=0,p=200,don=0;
+int count1=0,count2=0,count3=0,count4=0,count5=0,count6=0,count7=0,count8=0;
+int x=25, y=50,score=0,score1=0,score2=0,z=0;
+char str [100];
+void id1();
+void id();
+void draw_target();
+void redraw();
+void initialize()
+{	maxy=600;
+ count=0;
+ score=0;
+ maxx=500;
+ n=2;
+ m=3;
+ r=200;done=0;p=200;don=0;
+ count1=0;count2=0;count3=0;count4=0;count5=0;count6=0,count7=0;
+ count8=0;
+ x=25;y=50;
+}
+/*to display bitmap char*/
+void bitmap_output(int x, int y, char *string, void *font)
+{
+int len,i;
+glRasterPos2f(x,y);
+len=(int)strlen(string);
+for(i=0;i<len;i++)
+{
+glutBitmapCharacter(font,string[i]);
+}
+return;
+}
+void winner()
+{	glClear(GL_COLOR_BUFFER_BIT);
+	if(score1==score2)
+ {bitmap_output(200,350,"IT'S A DRAW",GLUT_BITMAP_TIMES_ROMAN_24);
+}
+	else if(score1>score2)
+	 bitmap_output(150,350,"CONGRATULATIONS!!!   Player 1 Wins",GLUT_BITMAP_TIMES_ROMAN_24);
+else
+		 bitmap_output(150,350,"CONGRATULATIONS!!!   Player 2 Wins",GLUT_BITMAP_TIMES_ROMAN_24);
+
+}
+void counting()
+{
+if(count1==1 && count2==1 && count3==1 && count4==1 && count5==1 && count6==1 )
+{
+bitmap_output(5,300," 2ND ROUND",GLUT_BITMAP_TIMES_ROMAN_24);
+			if(count7==1 && count8==1)
+			{	bitmap_output(5,350,"CONGRATULATIONS!! YOU HAVE COMPLETED THE GAME",GLUT_BITMAP_TIMES_ROMAN_24);
+				glutIdleFunc(NULL);
+			}
+			else if(count>=13)
+					{	sprintf(str,"No of Arrows left:%d",0);
+						bitmap_output(40,40,str,GLUT_BITMAP_HELVETICA_18);
+						bitmap_output(5,350,"GAME OVER ",GLUT_BITMAP_TIMES_ROMAN_24);
+						glutIdleFunc(NULL);
+					}
+				else
+				{  sprintf(str,"No of Arrows left :%d",13-count);
+						bitmap_output(40,40,str,GLUT_BITMAP_HELVETICA_18);
+				}
+}
+else if(count>=10)
+{
+	sprintf(str,"No of Arrows left:%d",0);
+	bitmap_output(40,40,str,GLUT_BITMAP_HELVETICA_18);
+bitmap_output(5,350,"GAME OVER",GLUT_BITMAP_TIMES_ROMAN_24);
+glutIdleFunc(NULL);
+}
+else
+{ sprintf(str,"No of Arrows left :%d",10-count);
+	bitmap_output(40,40,str,GLUT_BITMAP_HELVETICA_18);
+}
+}
+/*TO CHECK WHETHER ARROW HITS TARGET*/
+void disa()
+{
+	if(z==0)
+		score1=score;
+	else
+		score2=score;
+	if((x+110>=285)  && (x+110<=315)  &&  247>=500-y && 253<=530-y   &&  (!count1))
+{
+count1=1;
+x=25;
+score++;
+count++;
+glutIdleFunc(id);
+}
+else if ((x+110>=320) &&  (x+110<=350) && 247>=y && 253<=y+30  && (!count2))
+{
+count2=1;
+x=25;
+score++;
+count++;
+glutIdleFunc(id);
+}
+else if ((x+110>=360) && x+110<=390 && 247>=500-y && 253<=530-y  &&(!count3))
+{
+count3=1;
+x=25;
+score++;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110>=400) &&  x+110<=430 &&  247>=y && 253<=y+30   &&(!count4))
+{
+count4=1;
+x=25;score++;
+count++;
+glutIdleFunc(id);
+}
+else if(x+110>=435 && x+110<=465 &&   247>=500-y && 253<=530-y    &&(!count5))
+{
+count5=1;
+x=25;score++;
+
+count++;
+glutIdleFunc(id);
+}
+else if(x+110>=470 && x+110<=500 &&   247>=y && 253<=y+30  &&(!count6))
+{
+count6=1;
+x=25;score++;
+
+count++;
+glutIdleFunc(id);
+}
+else if(x+110>=r && x+110<=r+30 &&   247>=y && 253<=y+30  &&(!count7))
+{
+count7=1;
+x=25;
+count++;score++;
+glutIdleFunc(id);
+}
+else if(x+110>=p && x+110<=p+30 &&   247>=500-y && 253<=530-y  &&(!count8))
+{
+count8=1;
+x=25;
+count++;score++;
+glutIdleFunc(id);
+}
+
+}
+/*to move arrow up*/
+void id()
+{
+y+=n;
+disa();
+if(y>=maxy)
+{
+y=0;
+}
+glutPostRedisplay();
+counting();
+}
+/*to draw the arrow*/
+
+void win()
+{   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+glLoadIdentity();
+winner();
+glFlush();
+glutSwapBuffers();
+}
+
+void disp()
+{
+glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+glLoadIdentity();
+glColor3f(1,1,0);
+bitmap_output(150,450,"BLOCKSHOOTING",GLUT_BITMAP_TIMES_ROMAN_24);
+counting();
+// Drawing of arrow
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,1);
+glVertex2d(x+93,258);
+glColor3f(0,0,1);
+glVertex2d(x+110,250);
+glColor3f(0,1,0);
+glVertex2d(x+100,250);
+glEnd();
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,0);
+glVertex2d(x+100,250);
+glColor3f(1,1,1);
+glVertex2d(x+110,250);
+glColor3f(0,0,1);
+glVertex2d(x+93,242);
+glEnd();
+glLineWidth(3);
+glColor3f(1,1,1);
+glBegin(GL_LINES);
+glVertex2d(x,250);
+glVertex2d(x+100,250);
+glEnd();
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,1);
+glVertex2d(x+5,250);
+glColor3f(0,0,1);
+glVertex2d(x+10,250);
+glColor3f(0,1,0);
+glVertex2d(x+5,255);
+glEnd();
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,1);
+glVertex2d(x+5,250);
+glColor3f(0,0,1);
+glVertex2d(x+10,250);
+glColor3f(0,1,0);
+glVertex2d(x+5,245);
+glEnd();
+glBegin(GL_QUADS);
+glColor3f(1,1,1);
+glVertex2d(x,245);
+glColor3f(0,0,1);
+glVertex2d(x,255);
+glColor3f(0,1,0);
+glVertex2d(x+5,255);
+glVertex2d(x+5,245);
+glEnd();
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,1);
+glVertex2d(x-5,255);
+glColor3f(0,0,1);
+glVertex2d(x,255);
+glColor3f(0,1,0);
+glVertex2d(x,250);
+glEnd();
+glBegin(GL_TRIANGLES);
+glColor3f(1,1,1);
+glVertex2d(x-5,245);
+glColor3f(0,0,1);
+glVertex2d(x,245);
+glColor3f(0,1,0);
+glVertex2d(x,250);
+glEnd();
+draw_target(); // Drawing of target
+glFlush();
+glutSwapBuffers();
+}
+/*to clear screen & set projection mode*/
+
+void init()
+{
+	glClearColor(0,0,0,1);
+	glColor3f(1,0,0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0,500,0,500);
+	glMatrixMode(GL_MODELVIEW);
+	}
+	/*to draw the target inside line loop*/
+	void draw_target()
+	{
+		//target 1
+	if(count1==0)
+	{
+	glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(300,(515-y)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex2d(285,(530-y)%900);
+	glVertex2d(315,(530-y)%900);
+	glVertex2d(315,(500-y)%900);
+	glVertex2d(285,(500-y)%900);
+	glEnd();
+	}
+	//target 2
+	if(count2==0)
+	{
+	glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(335,(y+15)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	 glVertex2d(320,(y)%900);
+	glVertex2d(350,(y)%900);
+	glVertex2d(350,(y+30)%900);
+	glVertex2d(320,(y+30)%900);
+	glEnd();
+	}
+	//target 3
+	if(count3==0)
+	{
+	glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(375,(515-y)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex2d(360,(500-y)%900);
+	glVertex2d(390,(500-y)%900);
+	glVertex2d(390,(530-y)%900);
+	glVertex2d(360,(530-y)%900);
+	glEnd();
+	}
+	//target 4
+	if(count4==0)
+	{glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(415,(y+15)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex2d(400,(y)%900);
+	glVertex2d(430,(y)%900);
+	glVertex2d(430,(y+30)%900);
+	glVertex2d(400,(y+30)%900);
+	glEnd();
+	}
+
+	//target 5
+	if(count5==0)
+	{
+	glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(450,(515-y)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex2d(435,(500-y)%900);
+	glVertex2d(465,(500-y)%900);
+	glVertex2d(465,(530-y)%900);
+	glVertex2d(435,(530-y)%900);
+	glEnd();
+	}
+
+	//target 6
+	if(count6==0)
+	{glColor3f(1,0,1);
+	glPointSize(30);
+	glBegin(GL_POINTS);
+	glVertex2d(485,(y+15)%900);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glVertex2d(470,(y)%900);
+	glVertex2d(500,(y)%900);
+	glVertex2d(500,(y+30)%900);
+	glVertex2d(470,(y+30)%900);
+	glEnd();
+	}
+	if(count1==1 && count2==1 && count3==1 && count4==1 && count5==1 && count6==1 )
+	{  
+	if( count7==0)
+	{  
+		if(r+30==470 || done==1)
+		{	r-=3;
+			done=1;
+			if(r==290)
+			{	done=0;
+			}
+		}
+		else
+		{	r+=3.5;
+		}
+		glColor3f(1,0,1);
+		glPointSize(30);
+		glBegin(GL_POINTS);
+		glVertex2d(r+15,(y+15)%900);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		glVertex2d(r,(y)%900);
+		glVertex2d(r+30,(y)%900);
+		glVertex2d(r+30,(y+30)%900);
+		glVertex2d(r,(y+30)%900);
+		glEnd();
+	}
+	if( count8==0)
+	{  if(p+30==470 || don==1)
+		{	p-=3;
+			don=1;
+			if(p==290)
+				don=0;
+		}
+		else
+		{	p+=3;
+		}
+		glColor3f(1,0,1);
+		glPointSize(30);
+		glBegin(GL_POINTS);
+		glVertex2d(p+15,(515-y)%900);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		glVertex2d(p,(500-y)%900);
+		glVertex2d(p+30,(500-y)%900);
+		glVertex2d(p+30,(530-y)%900);
+		glVertex2d(p,(530-y)%900);
+		glEnd();
+	}
+
+	}
+	glFlush();
+	Sleep(12);
+}
+/* to move the arrow left wen 'r' pressed*/
+
+void id1()
+{
+x+=m;
+y+=n;
+disa();
+
+if(x+110>maxx+100)
+{
+x=25;
+//y=0;
+count++;
+glutIdleFunc(id);
+}
+glutPostRedisplay();
+}
+/*set key to perform desired operation*/
+void keys(unsigned char k,int x,int y)
+{
+if(k=='r')
+glutIdleFunc(id1);
+if(k=='q')
+exit(0);
+}
+/*sub menu to display instructions*/
+void demo_menu(int i)
+{
+switch(i)
+{
+case 5:
+case 6:
+case 7:
+case 8:break;
+}
+}
+/*sub menu to display designer names*/
+
+
+void demo(int i)
+{
+switch(i)
+{
+case 9:
+	glutDisplayFunc(disp);
+	glutIdleFunc(id);
+glutKeyboardFunc(keys);
+	
+break;
+case 10:z=1;
+	initialize();
+	glutDisplayFunc(disp);
+	glutIdleFunc(id);
+glutKeyboardFunc(keys);
+break;
+case 11: 
+	glutDisplayFunc(win);
+break;
+}
+}
+void game(int id)
+{
+switch(id)
+{ case 2:exit(0);
+}
+}
+/*main to call display,keyboard and idle func*/
+void main(int argc,char **argv)
+{ char player1[20],player2[20];
+int sub_menu;
+glutInit(&argc,argv);
+printf("enter player 1 name: ");
+scanf("%s",player1);
+printf("enter player 2 name: ");
+scanf("%s",player2);
+glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+glutInitWindowSize(900,900);
+glutCreateWindow("ARCHERY GAME BLOCK SHOOTING");
+sub_menu=glutCreateMenu(demo_menu);
+glutAddMenuEntry("r to move right",5);
+glutAddMenuEntry("15 arrows and 10 blocks present",6);
+glutAddMenuEntry("lost if arrow count exceeds blocks",7);
+glutAddMenuEntry("otherwise win",8);
+int submenu=glutCreateMenu(demo);
+glutAddMenuEntry(player1,9);
+glutAddMenuEntry(player2,10);
+glutAddMenuEntry("winner",11);
+glutCreateMenu(game);
+glutAddSubMenu("INSTRUCTION",sub_menu);
+glutAddSubMenu("ABOUT",submenu);
+glutAddMenuEntry("QUIT",2);
+glutAttachMenu(GLUT_RIGHT_BUTTON);
+init();
+glEnable(GL_DEPTH_TEST);
+glutMainLoop();
+
+}
